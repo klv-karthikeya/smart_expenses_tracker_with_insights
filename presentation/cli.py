@@ -5,6 +5,12 @@ from use_cases.expense_service import ExpenseService
 from presentation.visualizer import Visualizer
 
 class ExpenseCLI:
+    CYAN = "\033[96m"
+    GREEN = "\033[92m"
+    YELLOW = "\033[93m"
+    RED = "\033[91m"
+    BOLD = "\033[1m"
+    END = "\033[0m"
 
     def __init__(self, service: ExpenseService):
         self._service = service
@@ -13,17 +19,20 @@ class ExpenseCLI:
         os.system('cls' if os.name == 'nt' else 'clear')
 
     def _print_menu(self):
-        print("\n--- Smart Expense Tracker ---")
-        print("1. Add Expense")
-        print("2. View Monthly Summary")
-        print("3. View Category Breakdown (Chart)")
-        print("4. Get Spending Insights")
-        print("5. Exit")
+        print(f"\n{self.CYAN}{self.BOLD}================================")
+        print(f"   SMART EXPENSE TRACKER v1.0")
+        print(f"================================{self.END}")
+        print(f"{self.GREEN}1.{self.END} Log New Expense")
+        print(f"{self.GREEN}2.{self.END} Monthly Summary")
+        print(f"{self.GREEN}3.{self.END} Category Pie Chart")
+        print(f"{self.GREEN}4.{self.END} Spending Insights")
+        print(f"{self.RED}5.{self.END} Exit System")
+        print(f"{self.CYAN}--------------------------------{self.END}")
 
     def run(self):
         while True:
             self._print_menu()
-            choice = input("Select an option: ")
+            choice = input(f"{self.BOLD}Select an option > {self.END}")
 
             if choice == '1':
                 self._add_expense_flow()
@@ -34,55 +43,56 @@ class ExpenseCLI:
             elif choice == '4':
                 self._view_insights_flow()
             elif choice == '5':
-                print("Goodbye!")
+                print(f"\n{self.YELLOW}Shutting down systems... Goodbye!{self.END}")
                 break
             else:
-                print("Invalid choice, please try again.")
+                print(f"\n{self.RED}Invalid choice, try again.{self.END}")
 
     def _add_expense_flow(self):
         try:
-            date_str = input("Enter date (YYYY-MM-DD) [Leave blank for today]: ")
+            print(f"\n{self.CYAN}--- NEW ENTRY ---{self.END}")
+            date_str = input("Date (YYYY-MM-DD) [blank for today]: ")
             if not date_str:
                 date_val = datetime.now().date()
             else:
                 date_val = datetime.strptime(date_str, "%Y-%m-%d").date()
 
-            category = input("Enter category (e.g. Food, Travel, Bills): ").strip()
-            amount = float(input("Enter amount: "))
-            description = input("Enter description: ").strip()
+            category = input("Category (Food, Travel, etc.): ").strip()
+            amount = float(input("Amount: "))
+            description = input("Description: ").strip()
 
             self._service.add_expense(date_val, category, amount, description)
-            print("Expense added successfully!")
+            print(f"\n{self.GREEN}{self.BOLD}>> SUCCESS: Expense recorded!{self.END}")
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"\n{self.RED}{self.BOLD}!! ERROR: {e}{self.END}")
 
     def _view_summary_flow(self):
         try:
-            month = int(input("Enter month (1-12): "))
-            year = int(input("Enter year (YYYY): "))
+            print(f"\n{self.CYAN}--- SUMMARY QUERY ---{self.END}")
+            month = int(input("Month (1-12): "))
+            year = int(input("Year (YYYY): "))
             total = self._service.get_monthly_summary(month, year)
-            print(f"\nTotal expenses for {month}/{year}: ${total:.2f}")
+            print(f"\n{self.YELLOW}{self.BOLD}TOTAL SPENDING ({month}/{year}): ${total:.2f}{self.END}")
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"\n{self.RED}{self.BOLD}!! ERROR: {e}{self.END}")
 
     def _view_chart_flow(self):
         breakdown = self._service.get_category_breakdown()
         if not breakdown:
-            print("No expenses found.")
+            print(f"\n{self.YELLOW}No data available for visualization.{self.END}")
             return
         
         try:
-            print("Generating chart...")
+            print(f"\n{self.GREEN}Initializing graphics sequence...{self.END}")
             Visualizer.plot_category_breakdown(breakdown)
         except Exception as e:
-            print("\nError generating chart. Ensure matplotlib is installed.")
-            print(f"Breakdown: {breakdown}")
+            print(f"\n{self.RED}!! Graphics failed. Ensure Matplotlib is installed.{self.END}")
 
     def _view_insights_flow(self):
         insights = self._service.get_insights()
         if not insights["highest_spending_category"]:
-            print("No data available for insights.")
+            print(f"\n{self.YELLOW}No data found for insights.{self.END}")
         else:
-            print("\n--- Spending Insights ---")
-            print(f"Highest Spending Category: {insights['highest_spending_category']}")
-            print(f"Amount Spent: ${insights['highest_amount']:.2f}")
+            print(f"\n{self.CYAN}--- SPENDING INSIGHTS ---{self.END}")
+            print(f"{self.BOLD}Highest Category:{self.END} {insights['highest_spending_category']}")
+            print(f"{self.BOLD}Total Amount:   {self.END} ${insights['highest_amount']:.2f}")

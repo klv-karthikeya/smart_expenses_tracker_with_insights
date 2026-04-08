@@ -1,11 +1,14 @@
-from infrastructure.csv_repository import CsvExpenseRepository
+from infrastructure.mysql_repository import MySqlExpenseRepository
 from use_cases.expense_service import ExpenseService
 from presentation.cli import ExpenseCLI
 
 def main():
-    DATA_FILE = "data/expenses.csv"
-
-    repository = CsvExpenseRepository(DATA_FILE)
+    repository = MySqlExpenseRepository(
+        host='localhost',
+        user='root',
+        password='root',
+        database='smart_expense_tracker'
+    )
     service = ExpenseService(repository)
     app = ExpenseCLI(service)
 
