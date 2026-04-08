@@ -1,0 +1,14 @@
+[
+    {
+        "date": "2026-04-08",
+        "category": "Drinks",
+        "amount": 125.0,
+        "description": "White Monster"
+    },
+    {
+        "date": "2026-04-08",
+        "category": "Drinks",
+        "amount": 40.0,
+        "description": "Diet Coke"
+    }
+]

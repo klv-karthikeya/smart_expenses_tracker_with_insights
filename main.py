@@ -1,14 +1,9 @@
-from infrastructure.mysql_repository import MySqlExpenseRepository
+from infrastructure.json_repository import JsonExpenseRepository
 from use_cases.expense_service import ExpenseService
 from presentation.cli import ExpenseCLI
 
 def main():
-    repository = MySqlExpenseRepository(
-        host='localhost',
-        user='root',
-        password='root',
-        database='smart_expense_tracker'
-    )
+    repository = JsonExpenseRepository("expenses.json")
     service = ExpenseService(repository)
     app = ExpenseCLI(service)
 
