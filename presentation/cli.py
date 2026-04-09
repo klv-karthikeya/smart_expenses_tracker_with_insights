@@ -72,7 +72,7 @@ class ExpenseCLI:
             month = int(input("Month (1-12): "))
             year = int(input("Year (YYYY): "))
             total = self._service.get_monthly_summary(month, year)
-            print(f"\n{self.YELLOW}{self.BOLD}TOTAL SPENDING ({month}/{year}): ${total:.2f}{self.END}")
+            print(f"\n{self.YELLOW}{self.BOLD}TOTAL SPENDING ({month}/{year}): ₹{total:.2f}{self.END}")
         except Exception as e:
             print(f"\n{self.RED}{self.BOLD}!! ERROR: {e}{self.END}")
 
@@ -95,4 +95,4 @@ class ExpenseCLI:
         else:
             print(f"\n{self.CYAN}--- SPENDING INSIGHTS ---{self.END}")
             print(f"{self.BOLD}Highest Category:{self.END} {insights['highest_spending_category']}")
-            print(f"{self.BOLD}Total Amount:   {self.END} ${insights['highest_amount']:.2f}")
+            print(f"{self.BOLD}Total Amount:   {self.END} ₹{insights['highest_amount']:.2f}")

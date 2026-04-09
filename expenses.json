@@ -10,5 +10,11 @@
         "category": "Drinks",
         "amount": 40.0,
         "description": "Diet Coke"
+    },
+    {
+        "date": "2026-04-09",
+        "category": "Food",
+        "amount": 1000.0,
+        "description": "Street Food with friends"
     }
 ]
